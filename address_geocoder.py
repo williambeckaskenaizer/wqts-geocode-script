@@ -7,12 +7,6 @@ A little hacky, but it'll do.
 
 7/9/2020
 """
-import warnings
-
-with warnings.catch_warnings():
-    warnings.filterwarnings("ignore", category=DeprecationWarning)
-    import tkinter as tk
-
 import os
 import subprocess
 import csv
@@ -20,7 +14,7 @@ import pandas as pd
 import sys
 import time
 from geopy.geocoders import ArcGIS, Bing, Nominatim, OpenCage, GoogleV3, OpenMapQuest
-# import tkinter as tk
+import tkinter as tk
 from tkinter import filedialog
 
 os.system('cls')
