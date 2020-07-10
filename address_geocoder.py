@@ -8,7 +8,7 @@ A little hacky, but it'll do.
 7/9/2020
 """
 
-
+import platform
 import os
 import subprocess
 import csv
@@ -24,17 +24,11 @@ Make sure packages are installed
 
 def install(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
-install_list = ["pandas", "geopy"]
+install_list = ["pandas", "geopy", "xlrd"]
 for package in install_list:
     install(package)
 import pandas as pd
 from geopy.geocoders import ArcGIS, Bing, Nominatim, OpenCage, GoogleV3, OpenMapQuest
-
-
-
-os.system('cls')
-os.system('clear')
-
 
 def print_logo():
     print("\t **       **   *******    **********  ********")
@@ -70,8 +64,7 @@ for package in install_list:
 """
 clear the window :)
 """
-os.system('cls')
-os.system('clear')
+os.system('cls') if platform.platform() == "Windows" else os.system('clear')
 print_logo()
 
 
@@ -104,6 +97,7 @@ print('\n')
 address_num = input(
     "Enter the number next to the desired sheet in the list above (e.g. 1 for " + str(base_file.sheet_names[0]) + "): ")
 
+
 address_sheet = base_file.sheet_names[int(address_num) - 1]
 print("Selected sheet:", address_sheet)
 
@@ -113,7 +107,7 @@ header_sheet = base_file.parse(address_sheet, index_col=0)
 sheet_columns = header_sheet.columns.to_list()
 
 col_count = 1
-print("Available columns in ", address_sheet, " are: \n")
+print("Available columns in '", address_sheet, "' are: \n")
 for column in sheet_columns:
     if("Unnamed" not in column):
         print(col_count, ":", column)
@@ -141,7 +135,7 @@ Progress bar function courtesy of StackOverflow :)
 """
 
 
-def printProgressBar(iteration, total, prefix='', suffix='', decimals=1, length=100, fill='X', printEnd="\r"):
+def printProgressBar(iteration, total, prefix='', suffix='', decimals=1, length=100, fill='█', printEnd="\r"):
     percent = ("{0:." + str(decimals) + "f}").format(100 *
                                                      (iteration / float(total)))
     filledLength = int(length * iteration // total)
