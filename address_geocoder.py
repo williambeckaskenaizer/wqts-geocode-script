@@ -17,7 +17,12 @@ import time
 import tkinter as tk
 from tkinter import filedialog
 
-os.system('cls') if platform.platform() == "Windows" else os.system('clear')
+"""
+clear the window :)
+"""
+def clear_terminal():
+    os.system('cls') if platform.system() == "Windows" else os.system('clear')
+clear_terminal()
 
 """
 Make sure packages are installed
@@ -60,9 +65,9 @@ abbr = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
         "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"]
 
 """
-clear the window :)
+begin!
 """
-os.system('cls') if platform.platform() == "Windows" else os.system('clear')
+clear_terminal()
 print_logo()
 
 
