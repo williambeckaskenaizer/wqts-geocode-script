@@ -7,15 +7,30 @@ A little hacky, but it'll do.
 
 7/9/2020
 """
+
+
 import os
 import subprocess
 import csv
-import pandas as pd
 import sys
 import time
-from geopy.geocoders import ArcGIS, Bing, Nominatim, OpenCage, GoogleV3, OpenMapQuest
 import tkinter as tk
 from tkinter import filedialog
+
+"""
+Make sure packages are installed
+"""
+
+
+def install(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+install_list = ["pandas", "geopy"]
+for package in install_list:
+    install(package)
+import pandas as pd
+from geopy.geocoders import ArcGIS, Bing, Nominatim, OpenCage, GoogleV3, OpenMapQuest
+
+
 
 os.system('cls')
 os.system('clear')
@@ -42,10 +57,6 @@ abbr = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
         "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
         "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
         "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"]
-
-"""
-Make sure packages are installed
-"""
 
 
 def install(package):
