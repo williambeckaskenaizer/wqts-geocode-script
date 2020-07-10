@@ -17,19 +17,26 @@ import time
 import tkinter as tk
 from tkinter import filedialog
 
+os.system('cls') if platform.platform() == "Windows" else os.system('clear')
+
 """
 Make sure packages are installed
 """
-
-
 def install(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
-install_list = ["pandas", "geopy", "xlrd"]
+install_list = ['pandas', 'geopy', 'xlrd']
+reqs = subprocess.check_output([sys.executable, '-m', 'pip', 'freeze'])
+installed_packages = [r.decode().split('==')[0] for r in reqs.split()]
 for package in install_list:
-    install(package)
+    if package not in installed_packages:
+        install(package)
 import pandas as pd
 from geopy.geocoders import ArcGIS, Bing, Nominatim, OpenCage, GoogleV3, OpenMapQuest
 
+
+"""
+Flashy :)
+"""
 def print_logo():
     print("\t **       **   *******    **********  ********")
     print("\t/**      /**  **/////**  /////**///  **////// ")
@@ -44,22 +51,13 @@ def print_logo():
 
 
 """
- State codes for later
+ State codes for input check
 """
 abbr = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
         "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
         "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
         "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
         "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"]
-
-
-def install(package):
-    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
-
-
-install_list = ["pandas", "geopy"]
-for package in install_list:
-    install(package)
 
 """
 clear the window :)
