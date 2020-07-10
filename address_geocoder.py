@@ -76,8 +76,6 @@ initialize geocoders (just using ArcGIS for now)
 arcgis = ArcGIS(timeout=100)
 # nominatim = Nominatim(user_agent="WQTS", timeout=100)
 # opencage = OpenCage('your-API-key', timeout=100)
-# googlev3 = GoogleV3(
-#     api_key='AIzaSyDcdu047ecBDeC9LGeut1hInoeJRTiMwsQ', timeout=100)
 # openmapquest = OpenMapQuest('api-key', timeout=100)
 # geolocator = Nominatim(user_agent="WQTS")
 
