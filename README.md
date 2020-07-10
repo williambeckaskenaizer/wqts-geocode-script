@@ -8,6 +8,4 @@ If you're new to python scripts:
 - drag "address_geocoder.py" into the window. A directory should appear
 - Hit enter. Assuming python is installed correctly, it will run
 ## Windows:
-- I'll write a batch file for you at some point. 
-- For now, I don't have access to a PC, and cannot document a surefire method.
-- Sorry :(
+- Run the file address_geocoder inside the "dist" folder
