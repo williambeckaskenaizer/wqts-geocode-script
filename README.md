@@ -1,7 +1,7 @@
 # wqts-geocode-script
 ### Python script for company use when geocoding address batches 
 #### Requires [Python 3](https://www.python.org/downloads/). All other dependencies will be installed automagically.
-If you're comfortable running python scripts, just run it normally
+If you're comfortable running python scripts, run it as you normally would.
 If you're new to python scripts:
 ## Mac OS:
 - open terminal
