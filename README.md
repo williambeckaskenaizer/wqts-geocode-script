@@ -8,4 +8,6 @@ If you're new to python scripts:
 - drag "address_geocoder.py" into the window. A directory should appear
 - Hit enter. Assuming python is installed correctly, it will run
 ## Windows:
-- Run the file address_geocoder inside the "dist" folder
+- Install python 3, and MAKE SURE to tick the "add to path option" in the installer
+- open CMD
+- type "python " (including the space), then drag the file onto the CMD window, and hit enter
