@@ -7,19 +7,35 @@ A little hacky, but it'll do.
 
 7/9/2020
 """
-
-from geopy.geocoders import ArcGIS, Bing, Nominatim, OpenCage, GoogleV3, OpenMapQuest
-from commonregex import CommonRegex
-from tkinter import filedialog
-import tkinter as tk
 import time
 import sys
 import csv
 import subprocess
 import os
 import platform
-import pandas as pd
 
+"""
+Make sure packages are installed
+"""
+def install(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
+install_list = ['pandas', 'geopy', 'xlrd', 'commonregex']
+reqs = subprocess.check_output([sys.executable, '-m', 'pip', 'freeze'])
+installed_packages = [r.decode().split('==')[0] for r in reqs.split()]
+for package in install_list:
+    if package not in installed_packages:
+        install(package)
+
+import pandas as pd
+from geopy.geocoders import ArcGIS, Bing, Nominatim, OpenCage, GoogleV3, OpenMapQuest
+from commonregex import CommonRegex
+from tkinter import filedialog
+import tkinter as tk
+
+"""
+Colors for text formatting
+"""
 
 class bcolors:
     HEADER = '\033[95m'
@@ -43,23 +59,6 @@ def clear_terminal():
 
 
 clear_terminal()
-
-"""
-Make sure packages are installed
-"""
-
-
-def install(package):
-    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
-
-
-install_list = ['pandas', 'geopy', 'xlrd', 'commonregex']
-reqs = subprocess.check_output([sys.executable, '-m', 'pip', 'freeze'])
-installed_packages = [r.decode().split('==')[0] for r in reqs.split()]
-for package in install_list:
-    if package not in installed_packages:
-        install(package)
-
 
 """
 Flashy :)
@@ -274,6 +273,7 @@ def main():
         bcolors.FAIL + str(len(failed)), "addresse(s)"+ str(failed) +" are probably on Mars. (No data)." + bcolors.ENDC)
     if len(failed) > len(address_list)/2:
         print("Over half of the addresses could not be found. Did you specify the right column?")
-
-
 main()
+
+def run():
+    main()
