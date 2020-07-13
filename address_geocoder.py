@@ -7,6 +7,11 @@ A little hacky, but it'll do.
 
 7/9/2020
 """
+import tkinter as tk
+from tkinter import filedialog
+from commonregex import CommonRegex
+from geopy.geocoders import ArcGIS, Bing, Nominatim, OpenCage, GoogleV3, OpenMapQuest
+import pandas as pd
 import time
 import sys
 import csv
@@ -17,8 +22,11 @@ import platform
 """
 Make sure packages are installed
 """
+
+
 def install(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
 
 install_list = ['pandas', 'geopy', 'xlrd', 'commonregex']
 reqs = subprocess.check_output([sys.executable, '-m', 'pip', 'freeze'])
@@ -27,15 +35,11 @@ for package in install_list:
     if package not in installed_packages:
         install(package)
 
-import pandas as pd
-from geopy.geocoders import ArcGIS, Bing, Nominatim, OpenCage, GoogleV3, OpenMapQuest
-from commonregex import CommonRegex
-from tkinter import filedialog
-import tkinter as tk
 
 """
 Colors for text formatting
 """
+
 
 class bcolors:
     HEADER = '\033[95m'
@@ -46,7 +50,7 @@ class bcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
-    CYAN  = "\033[1;36m"
+    CYAN = "\033[1;36m"
 
 
 """
@@ -95,6 +99,23 @@ abbr = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
         "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
         "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
         "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"]
+
+states = {"AL": "Alabama", "AK": "Alaska", "AZ": "Arizona",
+          "AR": "Arkansas", "CA": "California", "CO": "Colorado",
+          "CT": "Connecticut", "DE": "Delaware", "FL": "Florida",
+          "GA": "Georgia", "HI": "Hawaii", "ID": "Idaho", "IL": "Illinois",
+          "IN": "Indiana", "IA": "Iowa", "KS": "Kansas", "KY": "Kentucky",
+          "LA": "Louisiana", "ME": "Maine", "MD": "Maryland",
+          "MA": "Massachusetts", "MI": "Michigan", "MN": "Minnesota",
+          "MS": "Mississippi", "MO": "Missouri", "MT": "Montana",
+          "NE": "Nebraska", "NV": "Nevada", "NH": "New Hampshire",
+          "NJ": "New Jersey", "NM": "New Mexico", "NY": "New York",
+          "NC": "North Carolina", "ND": "North Dakota", "OH": "Ohio",
+          "OK": "Oklahoma", "OR": "Oregon", "PA": "Pennsylvania",
+          "RI": "Rhode Island", "SC": "South Carolina", "SD": "South Dakota",
+          "TN": "Tennessee", "TX": "Texas", "UT": "Utah", "VT": "Vermont",
+          "VA": "Virginia", "WA": "Washington", "WV": "West Virginia",
+          "WI": "Wisconsin", "WY": "Wyoming"}
 
 """
 begin!
@@ -162,9 +183,11 @@ def auto_determine_address_col(working_sheet):
         print(bcolors.FAIL + "Could not determine address column." + bcolors.ENDC)
         return False
     if len(tie) > 1:
-       print(bcolors.WARNING + "warning: multiple address columns detected" + bcolors.ENDC)
+        print(bcolors.WARNING +
+              "warning: multiple address columns detected" + bcolors.ENDC)
     if len(tie) == 1:
-        print(bcolors.OKGREEN + "Found column of addresses \"" + addr_col + "\"" + bcolors.ENDC)
+        print(bcolors.OKGREEN + "Found column of addresses \"" +
+              addr_col + "\"" + bcolors.ENDC)
         return addr_col
 
 
@@ -181,8 +204,8 @@ def get_list_from_file():
         sheet_num += 1
     print('\n')
 
-    address_num = input(bcolors.CYAN + 
-        "Enter the number next to the desired sheet in the list above (e.g. 1 for " + str(base_file.sheet_names[0]) + "): " + bcolors.ENDC)
+    address_num = input(bcolors.CYAN +
+                        "Enter the number next to the desired sheet in the list above (e.g. 1 for " + str(base_file.sheet_names[0]) + "): " + bcolors.ENDC)
     address_sheet = base_file.sheet_names[int(address_num) - 1]
     print("Selected sheet:", address_sheet)
 
@@ -199,8 +222,8 @@ def get_list_from_file():
             if("Unnamed" not in column):
                 print(col_count, ":", column)
                 col_count += 1
-        address_column_num = input(bcolors.CYAN + 
-            "Enter the number next to the column containing the addresses: " + bcolors.ENDC)
+        address_column_num = input(bcolors.CYAN +
+                                   "Enter the number next to the column containing the addresses: " + bcolors.ENDC)
         address_column = sheet_columns[int(address_column_num)-1]
         addr_set = set(df[address_column].dropna().to_list())
         print("Selected column:", address_column, "\n")
@@ -218,11 +241,12 @@ def get_list_from_file():
 
 
 def get_geolocation_data(batch):
+    geocoders_used = []
     print("Geocode function received:", len(batch), "items to search for")
     count = 0
-    city = input(bcolors.CYAN + "Enter the city " + bcolors.UNDERLINE +
-                 "(spelling and spacing matter!): " + bcolors.ENDC + " ").title()
-    state = input(bcolors.CYAN +  "Enter the state (Texas, California, etc.): " + bcolors.ENDC).title()
+    city = input(bcolors.CYAN + "Enter a specific city if desired (recommended), otherwise hit Enter to skip: " + bcolors.ENDC + " ").title()
+    state = input(
+        bcolors.CYAN + "Enter a specific state if desired, otherwise hit Enter to skip: " + bcolors.ENDC).title()
     print("\n")
     failed = []
     coded_batch = [[]]
@@ -233,6 +257,8 @@ def get_geolocation_data(batch):
             printProgressBar(count, l, prefix='Geocoding Addresses: ',
                              suffix='[' + str(count) + '/' + str(l) + ']', length=50)
             for geocoder in geocoders:
+                if geocoder.domain not in geocoders_used:
+                    geocoders_used.append(geocoder.domain)
                 full_location = geocoder.geocode(address)
                 if full_location != None:
                     coded_batch.append(full_location)
@@ -240,7 +266,7 @@ def get_geolocation_data(batch):
             count += 1
         except:
             failed.append(address)
-    return coded_batch, failed
+    return coded_batch, failed, geocoders_used
 
 
 def write_to_file(coded_batch, sheet_name):
@@ -251,12 +277,12 @@ def write_to_file(coded_batch, sheet_name):
         count = 0
         try:
             for entry in coded_batch:
-                count += 1
                 l = len(coded_batch)
+                count += 1
                 printProgressBar(count, l, prefix='Writing Addresses:   ',
                                  suffix='[' + str(count) + '/' + str(l) + ']', length=50)
                 # because it's more satisfying to see the bar fill ...
-                time.sleep(0.009)
+                time.sleep(0.005)
                 writer.writerow(entry)
         except:
             pass
@@ -267,13 +293,18 @@ def write_to_file(coded_batch, sheet_name):
 
 def main():
     address_list, sheet_name = get_list_from_file()
-    coded, failed = get_geolocation_data(address_list)
+    coded, failed, used = get_geolocation_data(address_list)
     write_to_file(coded, sheet_name)
+    for coder in used:
+        print("Used " + bcolors.OKBLUE + bcolors.BOLD + str(coder) + bcolors.ENDC)
     print(bcolors.OKGREEN + "Found geolocation data for all entries" + bcolors.ENDC) if len(failed) == 0 else print(
-        bcolors.FAIL + str(len(failed)), "addresse(s)"+ str(failed) +" are probably on Mars. (No data)." + bcolors.ENDC)
+        bcolors.FAIL + str(len(failed)), "addresse(s)" + str(failed) + " are probably on Mars. (No data)." + bcolors.ENDC)
     if len(failed) > len(address_list)/2:
-        print("Over half of the addresses could not be found. Did you specify the right column?")
+        print("Over half of the addresses could not be found. Was the correct column selected?")
+
+
 main()
+
 
 def run():
     main()
